@@ -1,9 +1,9 @@
 def print_menu():
     global username
     print(f"How may I help you {username}:")
-    print("\t1. -- Placeholder Option --")
-    print("\t2. -- Placeholder Option --")
-    print("\t3. -- Placeholder Option --")
+    print("\t1. -- Re-run assistance --")
+    print("\t2. -- Proliferate options --")
+    print("\t3. -- Loop text --")
     print("\t4. -- End Conversation --")
 
     choice = input("Enter the number associated with your choice: ")
