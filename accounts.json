@@ -1,0 +1,16 @@
+{
+    "email": "folajimifabusuyi@gmail.com",
+    "password": "testing123$@()4",
+    "type": "Checkings",
+    "details": {
+        "rank": "VIP",
+        "balance_drain": 4000,
+        "interest_rate": 1.15
+    },
+    "balance": 0,
+    "user_info": [
+        "Daniel Fabusuyi",
+        "1532 Transit Parkway",
+        35
+    ]
+}
