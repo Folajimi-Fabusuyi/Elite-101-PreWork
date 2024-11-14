@@ -1,16 +1,47 @@
-{
-    "email": "folajimifabusuyi@gmail.com",
-    "password": "testing123$@()4",
-    "type": "Checkings",
-    "details": {
-        "rank": "VIP",
-        "balance_drain": 4000,
-        "interest_rate": 1.15
-    },
-    "balance": 0,
-    "user_info": [
-        "Daniel Fabusuyi",
-        "1532 Transit Parkway",
-        35
+[
+    [
+        {
+            "email": "ray",
+            "password": [
+                "sHeeMWuY",
+                "951"
+            ],
+            "type": "Checkings",
+            "details": {
+                "rank": "Basic",
+                "balance_drain": 0,
+                "interest_rate": 1.01
+            },
+            "balance": 0,
+            "user_info": [
+                "ray",
+                "tay",
+                "34"
+            ],
+            "level": 0
+        },
+        {
+            "email": "ray",
+            "password": [
+                "sHeeMWuY",
+                "958"
+            ],
+            "type": "Credit",
+            "details": {
+                "rank": "Basic",
+                "credit_increment": 1,
+                "credit_requirement": 0
+            },
+            "credit_score": 604,
+            "loan_balance": 0,
+            "user_info": [
+                "ray",
+                "tay",
+                "34"
+            ],
+            "level": 0,
+            "transactions": [],
+            "date_opened": "11/14/2024 - 11:53:54 PM"
+        }
     ]
-}
+]

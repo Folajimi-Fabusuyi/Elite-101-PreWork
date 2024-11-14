@@ -1,18 +1,18 @@
 import random
 
-ALPHABET = 'abcpqANOPTrstuvKLMklmxyzUVefgQURShijBCDdnoEFGHIJWXYZ'
+ALPHABET = 'aefghijFGHIwxDklmJKLMNyzQRSTUbABCnopqrEPOdVWstuvcXYZ'
 NUMERIC = '3601279845'
 SYMBOLIC = '!+<>,^&*?:@#.$%-_=;'
 
 def encrypt_password(password):
-    password_charachters = [char for char in password]
+    password_characters = [char for char in password]
     key = str(random.randint(111, 999))
     #each different key is one digit from the overall key generated
     alphabet_key, numeric_key, symbolic_key = int(key[0]), int(key[1]), int(key[2])
     encrypted_password = []
 
-    for char in password_charachters:
-        #for each charachter, gets new index using key corresponding to charachter's type
+    for char in password_characters:
+        #for each charachter, gets new index using key corresponding to charachter's type and key
         if char in ALPHABET:
             alphabet_index = ALPHABET.index(char)
             new_char = alphabet_index + alphabet_key
@@ -43,7 +43,7 @@ def decrypt_password(encrypted_password):
     decrypted_password = []
     alphabet_key, numeric_key, symbolic_key = int(encrypted_password[1][0]), int(encrypted_password[1][1]), int(encrypted_password[1][2])
     
-    #simply reverses the original lists and uses the key of each char to get original position
+    #Reverses the original lists and uses the key of each char to get original position
     for char in encrypted_password[0]:
         if char in ALPHABET:
             alphabet_index = ALPHABET[::-1].index(char)

@@ -1,73 +1,70 @@
-import random, getpass
-import password_functions as pswd
+import os
+import getpass
 
-# {Account LVL: ["Account Rank", LVL Balance Drain, Interest Rate]}
-ACCOUNT_DETAILS = {
-    0: {"rank": "Basic", 
-        "balance_drain": 0, 
-        "interest_rate": 1.01},
-    1:{"rank": "Economy", 
-        "balance_drain": 1000, 
-        "interest_rate": 1.08},
-    2: {"rank": "Premium", 
-        "balance_drain": 2500, 
-        "interest_rate": 1.1},
-    3: {"rank": "VIP", 
-        "balance_drain": 4000, 
-        "interest_rate": 1.15}
-}
-
-
-class Account:
-
-    def __init__(self, email="none", password=["none", 000], type="Checkings", level=0, user_info=["name", "address", "age"]):
-        self.email = email
-        self.password = password
-        self.type = type
-
-        if self.type == "Credit":
-            self.credit_init()
-        else:
-            self.checkings_init(level)
-
-        self.user_info = user_info
-
-    def checkings_init(self, level):
-        self.balance = 0
-        self.details = ACCOUNT_DETAILS[level]
-
-    def deposit_money(self, amount):
-        if self.type == "Checkings":
-            self.balance += amount
-
-    def update_account(self):
-        if self.type == "Checkings":
-            self.balance *= self.details["interest_rate"]
-            self.balance -= self.details["balance_drain"]
-            if self.balance < 0:
-                self.balance = 0
-                self.details = ACCOUNT_DETAILS[0]
-
-    def __str__(self):
-        return (f"\nName: {self.user_info[0]}\nAddress: {self.user_info[1]}\nAge: {self.user_info[2]}\nEmail: {self.email}\nAccount Type: {self.type}\nBalance: {self.balance}" +
-        f"\nAccount Rank: {self.details['rank']}\n\tDrain: {self.details['balance_drain']}\n\tInterest Rate: {self.details['interest_rate']}\n\tPassword: {self.password}")
+from password_functions import decrypt_password
+from account_storing import load_file
+from accounts import CheckingsAccount, CreditAccount
 
 
 def create_account():
-    print("You will now begin the account creation process")
-    email = input("Email: ")
-    password = pswd.encrypt_password(getpass.getpass("Password: "))
-    user_info = [input("Name: "), input("Address: "), input("Age: ")]
-    type = None
-    while type not in ["Checkings", "Credit"]:
-        type = input("Account Type [Checkings or Credit]: ").capitalize()
+    print("\tYou will now begin the account creation process")
 
-    return Account(email=email, password=password, user_info=user_info, type=type)
-            
-    
+    database = load_file()
+    email = input("\t\033[1m• Email:\033[0m ")
+
+    while email in [account[0]["email"] for account in database]:
+        print("\t\033[91m\033[1mEmail already exists.\033[0m")
+        email = input("\t\033[1m• Email:\033[0m")
+
+    password = getpass.getpass("\t\033[1m• Password \033[91m[WILL NOT SHOW FOR SECURITY]\033[0m\033[1m:\033[0m ")
+    user_info = [input("\t\033[1m• Name:\033[0m "), input("\t\033[1m• Address:\033[0m "),
+                 input("\t\033[1m• Age:\033[0m ")]
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    return [CheckingsAccount(email=email, password=password, user_info=user_info),
+            CreditAccount(email=email, password=password, user_info=user_info)]
+
+
+# TODO: Optional: Add a login attempt limit
+def login():
+    print("\tYou will now begin the login process")
+    database = load_file()
+    attempted_account = None
+
+    email = input("\t\033[1m• Email: \033[0m")
+    while email not in [account[0]["email"] for account in database]:
+        print("\t\033[91m\033[1mEmail doesn't exists.\033[0m")
+        email = input("\t\033[1m• Email: \033[0m")
+
+    for account in database:
+        if account[0]["email"] == email:
+            attempted_account = account
+
+    password = getpass.getpass("\t\033[1m• Password \033[91m[WILL NOT SHOW FOR SECURITY]\033[0m\033[1m:\033[0m ")
+    while password != decrypt_password(attempted_account[0]["password"]):
+        print("\t\033[91m\033[1mIncorrect password. Try Again\033[0m")
+        password = getpass.getpass("\t\033[1m• Password:\033[0m ")
+
+    print("\t\033[92m\033[1mLogin Successful\033[0m")
+
+    acc = attempted_account
+    checkings_account = CheckingsAccount(acc[0]["email"], decrypt_password(acc[0]["password"]), acc[0]["level"],
+                                         acc[0]["user_info"], acc[0]["balance"])
+    credit_account = CreditAccount(acc[1]["email"], decrypt_password(acc[1]["password"]), acc[1]["level"],
+                                   acc[1]["user_info"], acc[1]["date_opened"], acc[1]["credit_score"], acc[1]["loan_balance"],
+                                   acc[1]["transactions"])
+    return [checkings_account, credit_account]
+
 
 if __name__ == "__main__":
-    # new_account = Account(level=3, password="testing123$@()4", user_info=["Daniel Fabusuyi", "1532 Transit Parkway", 35], email="folajimifabusuyi@gmail.com")
-    new_account = create_account()
+    # new_account = CheckingsAccount(level=3, password="testing123$@()4", user_info=["Daniel Fabusuyi", "1532 Transit Parkway", 35], email="folajimifabusuyi@gmail.com")
+    # new_account = create_account()
+    # print(decrypt_password(new_account.password))
+
+    new_account = CreditAccount(level=0)
+    print(new_account.credit_score, new_account.loan_limit)
+    new_account.credit_score_update()
+    new_account.update_account()
+    print(new_account.credit_score, new_account.loan_limit)
     print(new_account)
-    print(pswd.decrypt_password(new_account.password))
